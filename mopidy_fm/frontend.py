@@ -10,9 +10,8 @@ class FMFrontend(pykka.ThreadingActor, core.CoreListener):
         self.core = core
 
     # Your frontend implementation
-
     def on_start(self):
-	logger.info("FM Addon started...")
+        logger.info("FM Addon started...")
 
     def on_stop(self):
         logger.info("FM Addon stopped...")
