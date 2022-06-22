@@ -9,6 +9,7 @@ from mopidy import core
 
 logger = logging.getLogger(__name__)
 
+
 class FMFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core):
         super(FMFrontend, self).__init__()
@@ -30,17 +31,17 @@ class FMFrontend(pykka.ThreadingActor, core.CoreListener):
             # the file already exists
             logging.debug("%s already exists while starting", "/tmp/rds_ctl")
 
-        #commandline = "sox -n -r 16000 -c 1 -t wav - | sudo pi_fm_adv --ctl /tmp/rds_ctl --audio -"
+        # commandline = "sox -n -r 16000 -c 1 -t wav - | sudo pi_fm_adv --ctl /tmp/rds_ctl --audio -"
         commandline = "tail -F /tmp/rds_ctl"
         args = shlex.split(commandline)
         logger.info(args)
-        subprocess.Popen(commandline,shell=True)
+        subprocess.Popen(commandline, shell=True)
 
-        with open("/tmp/rds_ctl","w") as fp:
+        with open("/tmp/rds_ctl", "w") as fp:
             try:
                 fp.write("RT Pirate started!\n")
             except OSError:
-               logger.warning("pifm Pipe has been closed!")
+                logger.warning("pifm Pipe has been closed!")
             finally:
                 fp.close()
 
@@ -53,23 +54,22 @@ class FMFrontend(pykka.ThreadingActor, core.CoreListener):
             # the file does not exist
             pass
 
-
     def track_playback_started(self, tl_track):
         track = tl_track.track
         artists = ", ".join(sorted([a.name for a in track.artists]))
         duration = track.length and track.length // 1000 or 0
         self.last_start_time = int(time.time())
         logger.info(f"Now playing track: {artists} - {track.name}")
-        track=(track.name or "")
-        #album=((track.album or "") and (track.album.name or ""))
-        duration=str(duration)
-        with open("/tmp/rds_ctl","w") as fp:
+        track = (track.name or "")
+        # album=((track.album or "") and (track.album.name or ""))
+        duration = str(duration)
+        with open("/tmp/rds_ctl", "w") as fp:
             try:
                 fp.write(f"RT {artists} - {track}\n")
             except OSError:
-               logger.warning("pifm Pipe has been closed!")
+                logger.warning("pifm Pipe has been closed!")
             finally:
-               fp.close()
+                fp.close()
 
     def track_playback_ended(self, tl_track, time_position):
         track = tl_track.track
@@ -91,6 +91,6 @@ class FMFrontend(pykka.ThreadingActor, core.CoreListener):
             try:
                 fp.write("RT Pause\n")
             except OSError:
-               logger.warning("pifm Pipe has been closed!")
+                logger.warning("pifm Pipe has been closed!")
             finally:
-               fp.close()
+                fp.close()
