@@ -1,9 +1,11 @@
-import pykka
 import logging
-from mopidy import core
+import os
+import shlex
+import subprocess
+import time
 
-import os, time
-import shlex, subprocess
+import pykka
+from mopidy import core
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ class FMFrontend(pykka.ThreadingActor, core.CoreListener):
             os.mkfifo("/tmp/rds_ctl")
         except FileExistsError:
             # the file already exists
-            logging.info("%s already exists while starting", "/tmp/rds_ctl")
+            logging.debug("%s already exists while starting", "/tmp/rds_ctl")
 
         #commandline = "sox -n -r 16000 -c 1 -t wav - | sudo pi_fm_adv --ctl /tmp/rds_ctl --audio -"
         commandline = "tail -F /tmp/rds_ctl"
