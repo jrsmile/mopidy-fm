@@ -25,4 +25,5 @@ class Extension(ext.Extension):
 
     def setup(self, registry):
         from .frontend import FMFrontend
+
         registry.add("frontend", FMFrontend)

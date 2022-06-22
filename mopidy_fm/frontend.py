@@ -61,7 +61,7 @@ class FMFrontend(pykka.ThreadingActor, core.CoreListener):
         duration = track.length and track.length // 1000 or 0
         self.last_start_time = int(time.time())
         logger.info(f"Now playing track: {artists} - {track.name}")
-        track = (track.name or "")
+        track = track.name or ""
         # album=((track.album or "") and (track.album.name or ""))
         duration = str(duration)
         with open("/tmp/rds_ctl", "w") as fp:
