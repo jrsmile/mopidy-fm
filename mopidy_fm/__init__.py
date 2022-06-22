@@ -8,6 +8,7 @@ __version__ = pkg_resources.get_distribution("Mopidy-FM").version
 
 logger = logging.getLogger(__name__)
 
+
 class Extension(ext.Extension):
 
     dist_name = "Mopidy-FM"

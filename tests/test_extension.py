@@ -1,5 +1,6 @@
 from mopidy_fm import Extension
-from mopidy_fm import frontend as frontend_lib
+
+# from mopidy_fm import frontend as frontend_lib
 
 
 def test_get_default_config():
@@ -17,7 +18,7 @@ def test_get_config_schema():
     schema = ext.get_config_schema()
 
     # TODO Test the content of your config schema
-    # assert "username" in schema
+    assert "frequency" in schema
     # assert "password" in schema
 
 

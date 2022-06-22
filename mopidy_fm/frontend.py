@@ -31,7 +31,8 @@ class FMFrontend(pykka.ThreadingActor, core.CoreListener):
             # the file already exists
             logging.debug("%s already exists while starting", "/tmp/rds_ctl")
 
-        # commandline = "sox -n -r 16000 -c 1 -t wav - | sudo pi_fm_adv --ctl /tmp/rds_ctl --audio -"
+        # commandline = "sox -n -r 16000 -c 1 -t wav - |"
+        # " sudo pi_fm_adv --ctl /tmp/rds_ctl --audio -"
         commandline = "tail -F /tmp/rds_ctl"
         args = shlex.split(commandline)
         logger.info(args)
@@ -87,7 +88,7 @@ class FMFrontend(pykka.ThreadingActor, core.CoreListener):
         if self.last_start_time is None:
             self.last_start_time = int(time.time()) - duration
         logger.debug(f"Scrobbling track: {artists} - {track.name}")
-        with open("/tmp/rds_ctl","w") as fp:
+        with open("/tmp/rds_ctl", "w") as fp:
             try:
                 fp.write("RT Pause\n")
             except OSError:
