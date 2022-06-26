@@ -30,10 +30,19 @@ class FMFrontend(pykka.ThreadingActor, core.CoreListener):
         except FileExistsError:
             # the file already exists
             logging.debug("%s already exists while starting", "/tmp/rds_ctl")
+        try:
+            # delete old contents of the pipe
+            os.remove("/tmp/pifm_fifo")
+        except FileNotFoundError:
+            # the file does not exist
+            pass
+        try:
+            os.mkfifo("/tmp/pifm_fifo")
+        except FileExistsError:
+            # the file already exists
+            logging.debug("%s already exists while starting", "/tmp/pifm_fifo")
 
-        # commandline = "sox -n -r 16000 -c 1 -t wav - |"
-        # " sudo pi_fm_adv --ctl /tmp/rds_ctl --audio -"
-        commandline = "tail -F /tmp/rds_ctl"
+        commandline = "sudo arecord -fS16_LE -r 16000 -Dplughw:2,0 -c 1 - | sudo pi_fm_adv --ctl /tmp/rds_ctl --audio -"
         args = shlex.split(commandline)
         logger.info(args)
         subprocess.Popen(commandline, shell=True)
